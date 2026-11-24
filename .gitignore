@@ -1,0 +1,61 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+
+# IDE and OS files
+.idea/
+.vscode/
+.vs/
+*.iml
+*.suo
+*.user
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Dependencies, builds, caches and test output
+node_modules/
+.gradle/
+.kotlin/
+.next/
+.nuxt/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+bin/
+obj/
+build/
+dist/
+out/
+target/
+coverage/
+TestResults/
+*.log
+*.tmp
+
+# Android machine-specific settings
+local.properties
+.cxx/
+.externalNativeBuild/
+captures/
+*.apk
+*.aab
+
+# Local database files and backups
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+*.bak
