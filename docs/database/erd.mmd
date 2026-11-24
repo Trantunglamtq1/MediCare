@@ -1,0 +1,337 @@
+erDiagram
+    appointments {
+        INTEGER id PK
+        TEXT code
+        INTEGER patient_id
+        INTEGER shift_id
+        INTEGER starts_at
+        INTEGER ends_at
+        TEXT status
+        TEXT reason
+        INTEGER created_at
+    }
+    doctor_shifts ||--o{ appointments : "shift_id"
+    patients ||--o{ appointments : "patient_id"
+    audit_logs {
+        INTEGER id PK
+        INTEGER actor_user_id
+        TEXT action
+        TEXT entity_type
+        TEXT entity_key
+        TEXT summary
+        INTEGER created_at
+    }
+    users |o--o{ audit_logs : "actor_user_id"
+    clinics {
+        INTEGER id PK
+        TEXT code
+        TEXT name
+        TEXT address
+        TEXT phone
+        TEXT timezone
+        INTEGER is_active
+    }
+    diagnosis_catalog {
+        INTEGER id PK
+        TEXT code
+        TEXT name
+        TEXT coding_system
+    }
+    doctor_clinics {
+        INTEGER id PK
+        INTEGER doctor_id
+        INTEGER clinic_id
+        INTEGER is_active
+    }
+    clinics ||--o{ doctor_clinics : "clinic_id"
+    doctors ||--o{ doctor_clinics : "doctor_id"
+    doctor_shifts {
+        INTEGER id PK
+        INTEGER assignment_id
+        INTEGER starts_at
+        INTEGER ends_at
+        TEXT status
+    }
+    doctor_clinics ||--o{ doctor_shifts : "assignment_id"
+    doctor_specialties {
+        INTEGER doctor_id PK
+        INTEGER specialty_id PK
+    }
+    specialties ||--o{ doctor_specialties : "specialty_id"
+    doctors ||--o{ doctor_specialties : "doctor_id"
+    doctors {
+        INTEGER id PK
+        INTEGER user_id
+        TEXT license_number
+        TEXT biography
+        INTEGER is_active
+    }
+    users ||--o{ doctors : "user_id"
+    encounter_diagnoses {
+        INTEGER id PK
+        INTEGER encounter_id
+        INTEGER diagnosis_id
+        INTEGER is_primary
+        TEXT notes
+    }
+    diagnosis_catalog ||--o{ encounter_diagnoses : "diagnosis_id"
+    encounters ||--o{ encounter_diagnoses : "encounter_id"
+    encounters {
+        INTEGER id PK
+        INTEGER appointment_id
+        INTEGER patient_id
+        TEXT chief_complaint
+        TEXT examination_notes
+        TEXT treatment_notes
+        INTEGER created_at
+    }
+    appointments ||--o{ encounters : "appointment_id, patient_id"
+    invoice_items {
+        INTEGER id PK
+        INTEGER invoice_id
+        TEXT description
+        INTEGER quantity
+        INTEGER unit_price_minor
+        INTEGER discount_minor
+    }
+    invoices ||--o{ invoice_items : "invoice_id"
+    invoices {
+        INTEGER id PK
+        TEXT code
+        INTEGER encounter_id
+        INTEGER patient_id
+        TEXT currency
+        TEXT status
+        INTEGER created_at
+    }
+    encounters ||--o{ invoices : "encounter_id, patient_id"
+    medication_batches {
+        INTEGER id PK
+        INTEGER clinic_id
+        INTEGER medication_id
+        TEXT lot_number
+        TEXT expires_on
+    }
+    medications ||--o{ medication_batches : "medication_id"
+    clinics ||--o{ medication_batches : "clinic_id"
+    medication_intakes {
+        INTEGER id PK
+        INTEGER plan_id
+        INTEGER scheduled_at
+        TEXT status
+        INTEGER taken_at
+        TEXT dose_snapshot
+        INTEGER recorded_by
+        INTEGER created_at
+    }
+    users |o--o{ medication_intakes : "recorded_by"
+    medication_plans ||--o{ medication_intakes : "plan_id"
+    medication_plan_times {
+        INTEGER id PK
+        INTEGER plan_id
+        TEXT local_time
+        INTEGER weekdays_mask
+    }
+    medication_plans ||--o{ medication_plan_times : "plan_id"
+    medication_plans {
+        INTEGER id PK
+        INTEGER patient_id
+        INTEGER medication_id
+        INTEGER prescription_item_id
+        TEXT dose_text
+        TEXT starts_on
+        TEXT ends_on
+        TEXT timezone
+        TEXT status
+    }
+    prescription_items |o--o{ medication_plans : "prescription_item_id, patient_id, medication_id"
+    medications ||--o{ medication_plans : "medication_id"
+    patients ||--o{ medication_plans : "patient_id"
+    medications {
+        INTEGER id PK
+        TEXT code
+        TEXT name
+        TEXT active_ingredient
+        TEXT strength
+        TEXT dosage_form
+        TEXT stock_unit
+        INTEGER is_active
+    }
+    notifications {
+        INTEGER id PK
+        INTEGER user_id
+        TEXT kind
+        TEXT channel
+        TEXT title
+        TEXT body
+        TEXT status
+        INTEGER attempts
+        INTEGER scheduled_at
+        INTEGER sent_at
+        INTEGER read_at
+        INTEGER created_at
+    }
+    users ||--o{ notifications : "user_id"
+    observations {
+        INTEGER id PK
+        INTEGER encounter_id
+        TEXT code
+        REAL numeric_value
+        TEXT text_value
+        TEXT unit
+        INTEGER observed_at
+    }
+    encounters ||--o{ observations : "encounter_id"
+    patient_allergies {
+        INTEGER id PK
+        INTEGER patient_id
+        TEXT allergen
+        TEXT reaction
+        TEXT severity
+        INTEGER created_at
+    }
+    patients ||--o{ patient_allergies : "patient_id"
+    patients {
+        INTEGER id PK
+        TEXT code
+        INTEGER user_id
+        TEXT full_name
+        TEXT birth_date
+        TEXT sex
+        TEXT phone
+        TEXT address
+        TEXT emergency_contact
+        INTEGER created_at
+    }
+    users |o--o{ patients : "user_id"
+    payments {
+        INTEGER id PK
+        INTEGER invoice_id
+        INTEGER amount_minor
+        TEXT method
+        TEXT request_key
+        TEXT provider_reference
+        INTEGER recorded_by
+        INTEGER created_at
+    }
+    users |o--o{ payments : "recorded_by"
+    invoices ||--o{ payments : "invoice_id"
+    personal_medications {
+        INTEGER id PK
+        INTEGER patient_id
+        INTEGER medication_id
+        INTEGER on_hand
+        TEXT notes
+    }
+    medications ||--o{ personal_medications : "medication_id"
+    patients ||--o{ personal_medications : "patient_id"
+    prescription_items {
+        INTEGER id PK
+        INTEGER prescription_id
+        INTEGER patient_id
+        INTEGER medication_id
+        TEXT dose_text
+        TEXT route
+        TEXT frequency_text
+        INTEGER duration_days
+        INTEGER quantity
+        TEXT instructions
+    }
+    prescriptions ||--o{ prescription_items : "prescription_id, patient_id"
+    medications ||--o{ prescription_items : "medication_id"
+    prescriptions {
+        INTEGER id PK
+        TEXT code
+        INTEGER encounter_id
+        INTEGER patient_id
+        TEXT status
+        TEXT notes
+        INTEGER created_at
+    }
+    encounters ||--o{ prescriptions : "encounter_id, patient_id"
+    refresh_sessions {
+        INTEGER id PK
+        INTEGER user_id
+        TEXT token_digest
+        INTEGER expires_at
+        INTEGER revoked_at
+        INTEGER created_at
+    }
+    users ||--o{ refresh_sessions : "user_id"
+    refunds {
+        INTEGER id PK
+        INTEGER payment_id
+        INTEGER amount_minor
+        TEXT reason
+        TEXT request_key
+        TEXT provider_reference
+        INTEGER recorded_by
+        INTEGER created_at
+    }
+    users |o--o{ refunds : "recorded_by"
+    payments ||--o{ refunds : "payment_id"
+    roles {
+        INTEGER id PK
+        TEXT code
+        TEXT name
+    }
+    schema_migrations {
+        INTEGER version PK
+        TEXT filename
+        TEXT checksum
+        INTEGER applied_at
+    }
+    service_orders {
+        INTEGER id PK
+        INTEGER encounter_id
+        INTEGER service_id
+        INTEGER quantity
+        TEXT status
+        TEXT result_notes
+        INTEGER created_at
+    }
+    services ||--o{ service_orders : "service_id"
+    encounters ||--o{ service_orders : "encounter_id"
+    services {
+        INTEGER id PK
+        INTEGER clinic_id
+        TEXT code
+        TEXT name
+        INTEGER price_minor
+        INTEGER is_active
+    }
+    clinics ||--o{ services : "clinic_id"
+    specialties {
+        INTEGER id PK
+        TEXT code
+        TEXT name
+    }
+    stock_movements {
+        INTEGER id PK
+        INTEGER batch_id
+        INTEGER prescription_item_id
+        INTEGER quantity_delta
+        TEXT kind
+        TEXT request_key
+        TEXT reason
+        INTEGER recorded_by
+        INTEGER created_at
+    }
+    users |o--o{ stock_movements : "recorded_by"
+    prescription_items |o--o{ stock_movements : "prescription_item_id"
+    medication_batches ||--o{ stock_movements : "batch_id"
+    user_roles {
+        INTEGER user_id PK
+        INTEGER role_id PK
+    }
+    roles ||--o{ user_roles : "role_id"
+    users ||--o{ user_roles : "user_id"
+    users {
+        INTEGER id PK
+        TEXT email
+        TEXT full_name
+        TEXT password_hash
+        TEXT phone
+        TEXT status
+        INTEGER created_at
+    }

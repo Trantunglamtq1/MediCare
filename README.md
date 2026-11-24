@@ -31,7 +31,23 @@ Các thư mục hiện chứa `.gitkeep` để Git lưu lại cấu trúc ban đ
 
 ## Trạng thái
 
-Đã khởi tạo cấu trúc kho mã nguồn. Chưa lựa chọn công nghệ, thêm mã ứng dụng hoặc cấu hình CI/CD.
+Đã thiết kế database SQLite dùng chung cho backend, Android và web: 34 bảng nghiệp vụ,
+schema có phiên bản, dữ liệu giả lập và kiểm tra tích hợp. Backend sẽ quản lý database;
+Android/web truy cập qua API. Chưa triển khai mã ứng dụng hoặc cấu hình CI/CD.
+
+## Database SQLite
+
+Xem [hướng dẫn database](database/README.md), [thiết kế và ERD](docs/database/design.md)
+và [từ điển dữ liệu](docs/database/data-dictionary.md).
+
+```powershell
+python database/manage.py init
+python database/manage.py demo
+python -m unittest discover -s database/tests -v
+```
+
+Cần Python 3.10+ với SQLite 3.37+; không cần thư viện ngoài. Các tệp database nằm trong
+`database/data/` và không được commit. Công nghệ backend và giao diện sẽ lựa chọn sau.
 
 ## Làm việc với dự án
 
